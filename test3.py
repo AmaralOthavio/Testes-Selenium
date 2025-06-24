@@ -3,10 +3,10 @@ import time
 
 driver = webdriver.Chrome()
 
-driver.get("http://127.0.0.1:5000/")  # Acessar a página do Flask
+driver.get("https://www.google.com")
 
 url = driver.current_url
-assert url == "http://127.0.0.1:5000/"
+assert url == "https://www.google.com/"
 
 driver.execute_script("alert('Teste');")  # Rolar para baixo
 

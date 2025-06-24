@@ -3,6 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 
 app = Flask(__name__)
@@ -27,25 +29,41 @@ def send_message():
     # Aguarde o usuário escanear o código QR
     input("Pressione Enter após escanear o código QR")
 
-    # Localizar o campo de busca de contatos
-    search_box = driver.find_element(By.XPATH, '//div[@contenteditable="true"][@data-tab="3"]')
-    search_box.click()
-    search_box.send_keys(contact_name)
-    search_box.send_keys(Keys.RETURN)
+    wait = WebDriverWait(driver, 10)  # Espera até 10 segundos
 
-    # Aguarde um pouco para garantir que a conversa carregue
-    time.sleep(2)
+    try:
+        # Localizar o campo de busca de contatos
+        search_box = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@contenteditable='true' and @data-tab='3']")))
+        print("Campo de busca de contatos encontrado.")
+        search_box.click()
+        search_box.send_keys(contact_name)
+        search_box.send_keys(Keys.RETURN)
 
-    # Localizar o campo de mensagem
-    message_box = driver.find_element(By.XPATH, '//div[@contenteditable="true"][@data-tab="1"]')
-    message_box.click()
-    message_box.send_keys(message)
-    message_box.send_keys(Keys.RETURN)
+        # Aguarde um pouco para garantir que a conversa carregue
+        time.sleep(7)  # Você pode ajustar ou remover isso se usar esperas explícitas
 
-    # Fechar o navegador
-    driver.quit()
+        # Localizar o campo de mensagem
+        message_box = wait.until(EC.presence_of_element_located(
+(By.XPATH, "//div[@contenteditable='true' and @data-tab='10']")  # '10' é mais comum agora
+        ))
 
-    return "Mensagem enviada!"
+        print("Campo de mensagem encontrado.")
+        message_box.click()
+        message_box.send_keys(message)
+
+        # Espera e clica no botão de envio
+        send_button = wait.until(EC.element_to_be_clickable(
+            (By.XPATH, "//span[@data-icon='send']")
+        ))
+        print("Botão de envio encontrado.")
+        send_button.click()
+
+        return "Mensagem enviada!"
+    except Exception as e:
+        print(f"Erro: {str(e)}")
+        return f"Erro: {e}."
+    finally:
+        driver.quit()
 
 if __name__ == '__main__':
     app.run(debug=True)
