@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Mensagem pelo WhatsApp</title>
+</head>
+<body>
+    <h1>Enviar Mensagem pelo WhatsApp</h1>
+    <form action="/send_message" method="post">
+        <label for="contact_name">Nome do Contato:</label>
+        <input type="text" id="contact_name" name="contact_name" required>
+        <br>
+        <label for="message">Mensagem:</label>
+        <textarea id="message" name="message" required></textarea>
+        <br>
+        <button type="submit">Enviar Mensagem</button>
+    </form>
+</body>
+</html>
